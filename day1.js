@@ -42,7 +42,6 @@ function getFullMass2(val){
     let newSum = 0;
     while(stopper){
         let calc = getMass(valCoppy);
-        // console.log('calc: ', calc);
         if(calc <= 0){
             stopper = false;
             break;
