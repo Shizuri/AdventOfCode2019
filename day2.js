@@ -2,6 +2,7 @@ const fs = require('fs')
 let contents = fs.readFileSync('day2.txt', 'utf8');
 let inputData = contents.split(',').map(num => Number(num));
 let fakeData = [1,9,10,3,2,3,11,0,99,30,40,50];
+let workingData = [...inputData];
 
 // console.log(workingData);
 workingData[1] = 12;
