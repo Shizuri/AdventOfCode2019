@@ -2,41 +2,53 @@ const fs = require('fs')
 let contents = fs.readFileSync('day1.txt', 'utf8');
 let vals = contents.split('\r\n').map(num => Number(num));
 
-let sum = 0;
-let fullSum = 0;
+let baseFuel = 0;
+let fullFuel = 0;
+
 for (const i of vals) {
-    sum += getMass(i);
+    baseFuel += getMass(i);
 }
 
-// console.log('base sum: ', sum); //3443395
-
-for (const i in vals) {
-    fullSum += getFullMass(i);
+for (const i of vals) {
+    fullFuel += getFullMass(i);
 }
 
-// console.log('fullSum: ', fullSum);
+console.log('baseFuel: ', baseFuel); //3443395
+console.log('extraFuel: ', fullFuel); //
 
-console.log(getFullMass(14) - 14);
-// console.log(getFullMass(1969) - 1969);
+// console.log('base fuel:', getMass(1969));
+// console.log('with recursion:', getFullMass(1969));
+// console.log('regular:', getFullMass2(100756));
+// console.log(getFullMass2(1969) - 1969);
 // console.log(getFullMass(100756) - 100756);
 
 function getMass(val) {
     return (Math.floor(val / 3) - 2);
 }
 
+//↓ with recursion
 function getFullMass(val) {
-    // console.log('val: ', val)
-    if ((Math.floor(val / 3) - 2) <= 0) {
-        // console.log('(Math.floor(val / 3) - 2): ', (Math.floor(val / 3) - 2));
+    let calculated = getMass(val);
+    if (calculated <= 0) {
         return 0;
     }
-    // console.log('val: ', val);
-    return (getFullMass(Math.floor(val / 3) - 2));
+    return (getFullMass(calculated) + calculated);
 }
 
-function factorial(x) {
-    if (x < 0) return;
-    if (x === 0) return 1;
-    return x * factorial(x - 1);
+//↓ without recursion
+function getFullMass2(val){
+    let valCoppy = val;
+    let stopper = true;
+    let newSum = 0;
+    while(stopper){
+        let calc = getMass(valCoppy);
+        // console.log('calc: ', calc);
+        if(calc <= 0){
+            stopper = false;
+            break;
+        }
+        newSum += calc;
+        valCoppy = calc;
+    }
+    return newSum;
 }
-console.log(factorial(3));
