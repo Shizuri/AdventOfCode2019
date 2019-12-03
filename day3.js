@@ -14,7 +14,6 @@ const wire1 = ['R8', 'U5', 'L5', 'D3'];
 const wire2 = ['U7', 'R6', 'D4', 'L4'];
 
 let wire1Path = [];
-// wire1Path.push([0, 0]);
 wire1Head = [];
 wire1Head.push([0, 0]);
 
@@ -28,14 +27,14 @@ for (let i = 0; i < wire1.length; i++) {
         let currentY = wire1Head[wire1Head.length - 1][1];
 
         // end point of wire after this move
-        let newX = currentX + force - 1;
+        let newX = currentX + force;
         let newY = currentY;
 
         // update head of wire
         wire1Head.push([newX, newY]);
 
         // "write out" the path of the wire in coordinates
-        for (let pathOfX = currentX; pathOfX < newX; pathOfX++) {
+        for (let pathOfX = currentX; pathOfX <= newX; pathOfX++) {
             wire1Path.push([pathOfX, newY]);
         }
     } else if (direction === 'L') {
@@ -43,20 +42,20 @@ for (let i = 0; i < wire1.length; i++) {
         let currentX = wire1Head[wire1Head.length - 1][0];
         let currentY = wire1Head[wire1Head.length - 1][1];
 
-        console.log('Left currentX : ', currentX, 'Left currentY : ', currentY)
+        // console.log('Left currentX : ', currentX, 'Left currentY : ', currentY)
 
         // end point of wire after this move
-        let newX = currentX - force - 1;
+        let newX = currentX - force;
         let newY = currentY;
 
         // update head of wire
         wire1Head.push([newX, newY]);
 
         // "write out" the path of the wire in coordinates
-        for (let pathOfX = currentX; pathOfX > newX; pathOfX--) {
+        for (let pathOfX = currentX; pathOfX >= newX; pathOfX--) {
             wire1Path.push([pathOfX, newY]);
         }
-    } else if (direction === 'U') {
+    } else if (direction === 'D') {
         // find current location of wire
         let currentX = wire1Head[wire1Head.length - 1][0];
         let currentY = wire1Head[wire1Head.length - 1][1];
@@ -64,63 +63,66 @@ for (let i = 0; i < wire1.length; i++) {
 
         // end point of wire after this move
         let newX = currentX;
-        let newY = currentY + force - 1;
+        let newY = currentY + force;
 
         // update head of wire
         wire1Head.push([newX, newY]);
 
         // "write out" the path of the wire in coordinates
-        for (let pathOfY = currentY; pathOfY < newY; pathOfY++) {
+        for (let pathOfY = currentY; pathOfY <= newY; pathOfY++) {
             // console.log('pathOfY: ', pathOfY)
 
             wire1Path.push([newX, pathOfY]);
         }
-    } else if (direction === 'D') {
+    } else if (direction === 'U') {
         // find current location of wire
         let currentX = wire1Head[wire1Head.length - 1][0];
         let currentY = wire1Head[wire1Head.length - 1][1];
 
         // end point of wire after this move
         let newX = currentX;
-        let newY = currentY - force - 1;
+        let newY = currentY - force;
 
         // update head of wire
         wire1Head.push([newX, newY]);
 
         // "write out" the path of the wire in coordinates
-        for (let pathOfY = currentY; pathOfY > newY; pathOfY--) {
+        for (let pathOfY = currentY; pathOfY >= newY; pathOfY--) {
             wire1Path.push([newX, pathOfY]);
         }
     }
-
-    // console.log('direction: ', direction);
-    // console.log('value: ', value);
 }
 
 console.log('wire1Head: ', wire1Head);
 console.log('wire1Path: ', wire1Path);
 
-// printArray(wire1Path);
-// process.stdout.write(`${wire1Path},`);
+printArray();
 
-if(wire1Path.includes([7, 2])){
-    console.log('yay!');
-} else {
-    console.log('damn it!');
-
+function containsCoordinage(x, y) {
+    for (let i of wire1Path) {
+        if (i[0] === x && i[1] === y) {
+            return true;
+        }
+    }
+    return false;
 }
 
-function printArray(array) {
-    for (let index = 0; index < 10; index++) {
+function printArray() {
+    for (let y = -10; y < 10; y++) {
         console.log();
-        for (let index2 = 0; index2 < 10; index2++) {
-            if(array[index][index2] !== undefined){
-                process.stdout.write(`${array[index][index2]},`)
-                // process.stdout.write(`o`);
+        for (let x = -10; x < 10; x++) {
+            if (x === 0 && y === 0) {
+                process.stdout.write(`O`);
             } else {
-                // process.stdout.write(`x`);
+                if (containsCoordinage(x, y)) {
+                    process.stdout.write(`X`);
+                } else {
+                    process.stdout.write(`.`);
+                }
             }
-            // console.log(array[index][index2]);
+
         }
     }
 }
+
+// process.stdout.write(`${array[index][index2]},`)
