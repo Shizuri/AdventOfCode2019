@@ -21,17 +21,39 @@ let wire2Path = [];
 let wire2Head = [];
 wire2Head.push([0, 0]);
 
-makeWire(wire1, wire1Path, wire1Head);
+makeWire(inputData1, wire1Path, wire1Head);
 
-console.log('wire1Head: ', wire1Head);
-console.log('wire1Path: ', wire1Path);
-printArray(wire1Path);
+// console.log('wire1Head: ', wire1Head);
+// console.log('wire1Path: ', wire1Path);
+// printArray(wire1Path);
 
-makeWire(wire2, wire2Path, wire2Head);
+makeWire(inputData2, wire2Path, wire2Head);
 
-console.log('wire2Head: ', wire2Head);
-console.log('wire2Path: ', wire2Path);
-printArray(wire2Path);
+// console.log('wire2Head: ', wire2Head);
+// console.log('wire2Path: ', wire2Path);
+// printArray(wire2Path);
+
+findCrossLocations(wire1Path, wire2Path);
+
+function findCrossLocations(wire1Path, wire2Path) {
+    let crossLocations = [];
+    let distances = [];
+    for(let i = 0; i < wire1Path.length; i++){
+        for(let j = 0; j < wire2Path.length; j++){
+            if(i === 0 && j === 0){
+                // ignore element [0, 0]
+            } else {
+                if(wire1Path[i][0] === wire2Path[j][0] && wire1Path[i][1] === wire2Path[j][1]){
+                    console.log('Wire path 1 location: ', wire1Path[i]);
+                    console.log('Wire path 2 location: ', wire2Path[j]);
+                    console.log('Distance: ', (Math.abs(wire1Path[i][0]) + Math.abs(wire2Path[j][1])));
+                    distances.push(Math.abs(wire1Path[i][0]) + Math.abs(wire2Path[j][1]));
+                }
+            }
+        }
+    }
+    console.log('min distance: ', Math.min(...distances));
+}
 
 function makeWire(wire, wirePath, wireHead) {
     for (let i = 0; i < wire.length; i++) {
