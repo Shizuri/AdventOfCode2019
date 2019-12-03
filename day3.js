@@ -13,6 +13,9 @@ let inputData2 = contents2.split(',');
 const wire1 = ['R8', 'U5', 'L5', 'D3'];
 const wire2 = ['U7', 'R6', 'D4', 'L4'];
 
+const testWire1 = ['R75', 'D30', 'R83', 'U83', 'L12', 'D49', 'R71', 'U7', 'L72'];
+const testWire2 = ['U62', 'R66', 'U55', 'R34', 'D71', 'R55', 'D58', 'R83'];
+
 let wire1Path = [];
 let wire1Head = [];
 wire1Head.push([0, 0]);
@@ -21,38 +24,67 @@ let wire2Path = [];
 let wire2Head = [];
 wire2Head.push([0, 0]);
 
-makeWire(inputData1, wire1Path, wire1Head);
+makeWire(testWire1, wire1Path, wire1Head);
 
 // console.log('wire1Head: ', wire1Head);
 // console.log('wire1Path: ', wire1Path);
 // printArray(wire1Path);
 
-makeWire(inputData2, wire2Path, wire2Head);
+makeWire(testWire2, wire2Path, wire2Head);
 
 // console.log('wire2Head: ', wire2Head);
 // console.log('wire2Path: ', wire2Path);
 // printArray(wire2Path);
 
-findCrossLocations(wire1Path, wire2Path);
+let crossLocations = findCrossLocations(wire1Path, wire2Path);
+
+findShotestCross(crossLocations, wire1Path, wire2Path);
+
+function findShotestCross(crossLocations, wire1Path, wire2Path) {
+    let numberOfStepsWire1 = [];
+    let numberOfStepsWire2 = [];
+    for (let i = 0; i < wire1Path.length; i++) {
+        for (let j = 0; j < crossLocations.length; j++) {
+            if (crossLocations[j][0] === wire1Path[i][0] && crossLocations[j][1] === wire1Path[i][1]) {
+                console.log('wire1 Crossing at: ', crossLocations[j], 'after number of steps: ', i);
+                numberOfStepsWire1.push(i);
+            }
+        }
+    }
+    for (let i = 0; i < wire2Path.length; i++) {
+        for (let j = 0; j < crossLocations.length; j++) {
+            if (crossLocations[j][0] === wire2Path[i][0] && crossLocations[j][1] === wire2Path[i][1]) {
+                console.log('wire2 Crossing at: ', crossLocations[j], 'after number of steps: ', i);
+                numberOfStepsWire2.push(i);
+            }
+        }
+    }
+    // console.log('numberOfStepsWire1: ', numberOfStepsWire1);
+    // console.log('numberOfStepsWire2: ', numberOfStepsWire2);
+    console.log('Lowest number of steps for wire 1: ', Math.min(...numberOfStepsWire1));
+    console.log('Lowest number of steps for wire 2: ', Math.min(...numberOfStepsWire2));
+    console.log('Solution: ', Math.min(...numberOfStepsWire1) + Math.min(...numberOfStepsWire2));
+}
 
 function findCrossLocations(wire1Path, wire2Path) {
     let crossLocations = [];
     let distances = [];
-    for(let i = 0; i < wire1Path.length; i++){
-        for(let j = 0; j < wire2Path.length; j++){
-            if(i === 0 && j === 0){
+    for (let i = 0; i < wire1Path.length; i++) {
+        for (let j = 0; j < wire2Path.length; j++) {
+            if (i === 0 && j === 0) {
                 // ignore element [0, 0]
             } else {
-                if(wire1Path[i][0] === wire2Path[j][0] && wire1Path[i][1] === wire2Path[j][1]){
-                    console.log('Wire path 1 location: ', wire1Path[i]);
-                    console.log('Wire path 2 location: ', wire2Path[j]);
-                    console.log('Distance: ', (Math.abs(wire1Path[i][0]) + Math.abs(wire2Path[j][1])));
+                if (wire1Path[i][0] === wire2Path[j][0] && wire1Path[i][1] === wire2Path[j][1]) {
+                    // console.log('Cross location: ', wire1Path[i]);
+                    crossLocations.push(wire1Path[i]);
+                    // console.log('Distance: ', (Math.abs(wire1Path[i][0]) + Math.abs(wire2Path[j][1])));
                     distances.push(Math.abs(wire1Path[i][0]) + Math.abs(wire2Path[j][1]));
                 }
             }
         }
     }
     console.log('min distance: ', Math.min(...distances));
+    return crossLocations;
 }
 
 function makeWire(wire, wirePath, wireHead) {
@@ -73,7 +105,7 @@ function makeWire(wire, wirePath, wireHead) {
             wireHead.push([newX, newY]);
 
             // "write out" the path of the wire in coordinates
-            for (let pathOfX = currentX; pathOfX <= newX; pathOfX++) {
+            for (let pathOfX = currentX; pathOfX < newX; pathOfX++) {
                 wirePath.push([pathOfX, newY]);
             }
         } else if (direction === 'L') {
@@ -91,7 +123,7 @@ function makeWire(wire, wirePath, wireHead) {
             wireHead.push([newX, newY]);
 
             // "write out" the path of the wire in coordinates
-            for (let pathOfX = currentX; pathOfX >= newX; pathOfX--) {
+            for (let pathOfX = currentX; pathOfX > newX; pathOfX--) {
                 wirePath.push([pathOfX, newY]);
             }
         } else if (direction === 'D') {
@@ -108,7 +140,7 @@ function makeWire(wire, wirePath, wireHead) {
             wireHead.push([newX, newY]);
 
             // "write out" the path of the wire in coordinates
-            for (let pathOfY = currentY; pathOfY <= newY; pathOfY++) {
+            for (let pathOfY = currentY; pathOfY < newY; pathOfY++) {
                 // console.log('pathOfY: ', pathOfY)
 
                 wirePath.push([newX, pathOfY]);
@@ -126,7 +158,7 @@ function makeWire(wire, wirePath, wireHead) {
             wireHead.push([newX, newY]);
 
             // "write out" the path of the wire in coordinates
-            for (let pathOfY = currentY; pathOfY >= newY; pathOfY--) {
+            for (let pathOfY = currentY; pathOfY > newY; pathOfY--) {
                 wirePath.push([newX, pathOfY]);
             }
         }
